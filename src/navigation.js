@@ -131,13 +131,14 @@ function searchPage() {
     arrowBtn.classList.remove('inactive')//activamos la vista (category) ya que se necesita la flecha de atras para volver a la vista principal(home)
     arrowBtn.classList.remove('header-arrow--white')//descativo la clase('header-arrow--white') de la vista (searchPage) para que la flecha sea de color moradito
     headerTitle.classList.add('inactive')//oculto el titulo ("PlatziMovies") ya que no se requiere en esta vista
-    headerCategoryTitle.classList.add('inactive')//desactivo el titulo("Acción") de la vista de (searchPage) ya que no se requiere 
+    headerCategoryTitle.classList.add('inactive')//desactivo el titulo("Acción") de la vista de (searchPage) ya que no se requiere
+    
     searchForm.classList.remove('inactive')//muestro el formulario de busqueda en la vista de(searchPage) 
     trendingPreviewSection.classList.add('inactive')//oculto la seccion de la vista previa de tendencias (trendingPreview) ya que no se necesita en esta vista
     categoriesPreviewSection.classList.add('inactive')//oculto la seccion de la vista (categorias previas) ya que no se requiere.    
     genericSection.classList.remove('inactive')//activo la seccion del DOM que tiene como (id="genericList") para mostrar las lista vertical de peliculas encontradas segun el parametro de busqueda ingresada por el usuario
     //ocultamos la seccion del DOM que tiene como (id='movieDetail') y que tiene como clase (movieDetail-container) ya que en la vista principal(home) no se muestra el detalle de la pelicula
-    movieDetailSection.classList.remove('inactive')//activo la seccion (movieDetailSection) ya que se requiere mostrar los detalles de la pelicula
+    movieDetailSection.classList.add('inactive')//desactivo la seccion (movieDetailSection) ya que se requiere mostrar los detalles de la pelicula
     //tengo que capturar del hash el valor ingresado por el usuario(millonarios) que se supone que es la pelicula a buscar --> #search=millonarios
     //['#search','millonarios'] --> el primer elemento del array('#search') no nos interesa, mientras que el segundo elemento del array ('millonarios') si nos interesa
     //const [_,query] = location.hash.split('='); //separo el hash (#search=millonarios) en dos partes que se dividen por el (=) -> como no me interesa la primera parte que es el hash(#search) pongo raya al piso (_)
