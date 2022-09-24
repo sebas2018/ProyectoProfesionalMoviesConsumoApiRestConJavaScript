@@ -1,0 +1,19 @@
+{
+  "name": "proyectopracticomoviesconsumoapirestconjavascript",
+  "version": "1.0.0",
+  "description": "proyecto practico de movies con consumo de Api Rest y javascript",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sebas2018/ProyectoPracticoMoviesConsumoApiRestConJavaScript.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sebas2018/ProyectoPracticoMoviesConsumoApiRestConJavaScript/issues"
+  },
+  "homepage": "https://github.com/sebas2018/ProyectoPracticoMoviesConsumoApiRestConJavaScript#readme"
+}
