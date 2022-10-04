@@ -40,13 +40,36 @@ const api = axios.create({
 }*/
 
 
+
+//UTILS
+//Observo todo el documento HTML para lo cual omito el parametro es decir el objeto de opciones
+//al (IntersectionObserver) solo le pasamos como parametro el  (callback) omitiendo el parametro de opciones, ya que este lazyloader se va a utilizar para todas 
+//las imagenes de todos los contenedores posibles.En el caso de que por cada contenedor de imagenes se quiera crear un lazyloader tambien se puede hacer pero tendria 
+//que psara el parametro de (options) al IntersectionObserver(callback, options)
+//Los (enries) son cada uno de los elemntos HTML que el usuario esta observando dentro del ViewPort, es decir, son cada una de las imagenes
+//--------------------------CREO EL OBSERVADOR (LAZYLOADER)----------------------------------------------------------
+const lazyLoader = new IntersectionObserver((entries) => {//por cada uno de los elementos de estas (entries -> esto es un array de entries) Hagamos algo
+
+    entries.forEach((entry) =>{ //Se sabe que el elemento entry va a tener la propiedad (data-img) con la url de la imagen de la pelicula a mostrar        
+        if(entry.isIntersecting){
+            console.log({entry}) // meto cada entry dentro de un objeto
+        const url = entry.target.getAttribute('data-img')//capturamos la url del entry(elemento/imagen)
+        entry.target.setAttribute('src', url);//insertamos la url en el entry(elemento/imagen)
+
+        }
+        
+    })
+})
+//-------------------------------------------------------------------------------------------------------------------
+
 //UTILS (Esta funcion es genericas o recursiva)
 //FUNCION QUE CREA CADA UNA DE LAS PELICULAS DEL LISTADO DE PELICULAS Y LAS UBICA EN EL RESPECTIVO CONTENEDOR
-//recibo como parametros el array de las 20 peliculas y el contenedor de donde se deden insertar() esas peliculas
-function createMovies(movies, container) {
+//recibo como parametros el array de las 20 peliculas y el contenedor de donde se deden insertar() esas peliculas, ademas recibe el parametro (true o false)
+//dependiendo si se quiere que se aplique (lazyLoading)
+function createMovies(movies, container, lazyLoad = false) {
     container.innerHTML = "";//limpiamos nuestras secciones para evitar errores de duplicados de las api que retorna las 20 peliculas
     // y la api que retorna las categorias de peliculas al momento de nabegar entre las diferentes vistas
-    movies.forEach(movie => {
+    movies.forEach(movie => { //por cada una de las peliculas que estemos agregando el forEach hay que llamar al observador de esa pelicula para agregarla
         const movieContainer = document.createElement('div');//creo el div que va a contener la imagen de la pelicula
         movieContainer.classList.add('movie-container')// le agrego al div la class="movie-container"
         movieContainer.addEventListener('click',() => {
@@ -55,7 +78,11 @@ function createMovies(movies, container) {
         const movieImage = document.createElement('img'); // creo la imagen que va estar dentro del div(movieContainer)
         movieImage.classList.add('movie-img') //le agrego a la imgen la class="movie-img"
         movieImage.setAttribute('alt', movie.title)// agrego el atributo (alt) con su valor a la (img)
-        movieImage.setAttribute('src', 'https://image.tmdb.org/t/p/w300/' + movie.poster_path)//agrego el atributo (src) con su valor       
+        //si (lazyLoad) es true entonces agrego la ruta de la imagen a 'data-img' y sino agrego la ruta a 'src'
+        movieImage.setAttribute(lazyLoad ? 'data-img':'src', 'https://image.tmdb.org/t/p/w300/' + movie.poster_path)//agrego el atributo (src) con su valor    
+        if(lazyLoad){//si el parametro (lazyLoad) es true agrego la imagen para que la observe mi (lazyLoader)
+            lazyLoader.observe(movieImage)//llamo al observador de la pelicula para vigilarla, de esta manera agrego cada una de las imagenes al array de(entries)  
+        }         
         movieContainer.appendChild(movieImage)//agergo la imagen al div (movieContainer)        
         container.appendChild(movieContainer)//agrego en  elemento seccion(container) del DOM el contenedor(div) que contiene la imagen de la pelicula
     })
@@ -96,8 +123,8 @@ async function getTrendingMoviesPreview() {
     //const data = await res.json();//esta linea sobra por que axios ya nos parsea el resultado a formato json como se observa en la linea (44)
     const movies = data.results;
     console.log({ data, movies })
-    createMovies(movies, trendingMoviesPreviewList)//llamo a la funcion createMovies y le paso como parametro(la lista de 20 movies y 
-    //el contenedor(trendingMoviesPreviewList))
+    createMovies(movies, trendingMoviesPreviewList, true)//llamo a la funcion createMovies y le paso como parametro(la lista de 20 movies y 
+    //el contenedor(trendingMoviesPreviewList)) y el parametro true que indica que a ese contenedor si se le aplica (lazyLoading)
 }
 
 //SIN AXIOS
