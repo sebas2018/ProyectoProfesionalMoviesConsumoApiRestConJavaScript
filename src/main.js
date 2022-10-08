@@ -82,12 +82,16 @@ function createMovies(movies, container, lazyLoad = false) {
         const movieImage = document.createElement('img'); // creo la imagen que va estar dentro del div(movieContainer)
         movieImage.classList.add('movie-img') //le agrego a la imgen la class="movie-img"
         movieImage.setAttribute('alt', movie.title)// agrego el atributo (alt) con su valor a la (img)
-       // movieImage.setAttribute('src', 'https://image.tmdb.org/t/p/w300/' + movie.poster_path,);
+       // movieImage.setAttribute('src', 'https://image.tmdb.org/t/p/w300/' + movie.poster_path,);       
         //si (lazyLoad) es true entonces agrego la ruta de la imagen a 'data-img' y sino agrego la ruta a 'src'
        movieImage.setAttribute(lazyLoad ? 'data-img':'src', 'https://image.tmdb.org/t/p/w300/' + movie.poster_path,);//agrego el atributo (src) con su valor    
         if(lazyLoad){//si el parametro (lazyLoad) es true agrego la imagen para que la observe mi (lazyLoader)
             lazyLoader.observe(movieImage);//llamo al observador de la pelicula para vigilarla, de esta manera agrego cada una de las imagenes al array de(entries)  
-        }         
+        }   
+        movieImage.addEventListener('error', ()=>{
+            //enviamos una imagen por defecto que se quiera mostrar cuando las imagenes de las peliculas no cargen
+            movieImage.setAttribute('src','https://static.platzi.com/static/images/error/img404.png')
+        })      
         movieContainer.appendChild(movieImage)//agergo la imagen al div (movieContainer)        
         container.appendChild(movieContainer)//agrego en  elemento seccion(container) del DOM el contenedor(div) que contiene la imagen de la pelicula
     });
@@ -188,8 +192,10 @@ async function getMoviesByCategory(id) {
     //const data = await res.json();//esta linea sobra por que axios ya nos parsea el resultado a formato json como se observa en la linea (44)
     const movies = data.results;
     console.log({ movies })
-    createMovies(movies, genericSection)//llamo a la funcion createMovies y le paso como parametro(la lista de 20 movies y 
+    createMovies(movies, genericSection,true)//llamo a la funcion createMovies y le paso como parametro(la lista de 20 movies, 
     //el contenedor(genericSection) ---> contenedor que muestra la lista de imagenes de las 20 peliculas de forma vertical en el hash (#category=))
+    //y el valor de true que indica que se aplicara el (lazyLoading) para que solo cragen las imagenes del Viewport es decir las imagenes que el
+    //usuario esta viendo en ese momento y a medidad que baje el scroll pues se van mostrando las otras imagenes de peliculas.
 
 }
 
