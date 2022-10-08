@@ -2,6 +2,8 @@
 console.log('API URL= https://fgdsgdsgdsfgds.com/dfsfsdf?api_key='+API_KEY)*/
 //import { API_KEY } from "./secrets";
 
+
+
 //creamos una instancia de axios
 const api = axios.create({
     baseURL: 'https://api.themoviedb.org/3/',// URL Base para solictude a las Apis
@@ -58,14 +60,15 @@ const lazyLoader = new IntersectionObserver((entries) => {//por cada uno de los 
 
         }
         
-    })
-})
+    });
+});
 //-------------------------------------------------------------------------------------------------------------------
 
 //UTILS (Esta funcion es genericas o recursiva)
 //FUNCION QUE CREA CADA UNA DE LAS PELICULAS DEL LISTADO DE PELICULAS Y LAS UBICA EN EL RESPECTIVO CONTENEDOR
 //recibo como parametros el array de las 20 peliculas y el contenedor de donde se deden insertar() esas peliculas, ademas recibe el parametro (true o false)
 //dependiendo si se quiere que se aplique (lazyLoading)
+//function createMovies(movies, container)function createMovies(movies, container) {
 function createMovies(movies, container, lazyLoad = false) {
     container.innerHTML = "";//limpiamos nuestras secciones para evitar errores de duplicados de las api que retorna las 20 peliculas
     // y la api que retorna las categorias de peliculas al momento de nabegar entre las diferentes vistas
@@ -73,19 +76,20 @@ function createMovies(movies, container, lazyLoad = false) {
         const movieContainer = document.createElement('div');//creo el div que va a contener la imagen de la pelicula
         movieContainer.classList.add('movie-container')// le agrego al div la class="movie-container"
         movieContainer.addEventListener('click',() => {
-            location.hash = '#movie='+movie.id//nos dirige a la vista del hash (#movie=) que es la vista de detalle pelicula y le concatenamos el id de la pelicula
-        })
+            location.hash = '#movie='+movie.id;//nos dirige a la vista del hash (#movie=) que es la vista de detalle pelicula y le concatenamos el id de la pelicula
+        });
         const movieImage = document.createElement('img'); // creo la imagen que va estar dentro del div(movieContainer)
         movieImage.classList.add('movie-img') //le agrego a la imgen la class="movie-img"
         movieImage.setAttribute('alt', movie.title)// agrego el atributo (alt) con su valor a la (img)
+       // movieImage.setAttribute('src', 'https://image.tmdb.org/t/p/w300/' + movie.poster_path,);
         //si (lazyLoad) es true entonces agrego la ruta de la imagen a 'data-img' y sino agrego la ruta a 'src'
-        movieImage.setAttribute(lazyLoad ? 'data-img':'src', 'https://image.tmdb.org/t/p/w300/' + movie.poster_path)//agrego el atributo (src) con su valor    
+       movieImage.setAttribute(lazyLoad ? 'data-img':'src', 'https://image.tmdb.org/t/p/w300/' + movie.poster_path,);//agrego el atributo (src) con su valor    
         if(lazyLoad){//si el parametro (lazyLoad) es true agrego la imagen para que la observe mi (lazyLoader)
-            lazyLoader.observe(movieImage)//llamo al observador de la pelicula para vigilarla, de esta manera agrego cada una de las imagenes al array de(entries)  
+            lazyLoader.observe(movieImage);//llamo al observador de la pelicula para vigilarla, de esta manera agrego cada una de las imagenes al array de(entries)  
         }         
         movieContainer.appendChild(movieImage)//agergo la imagen al div (movieContainer)        
         container.appendChild(movieContainer)//agrego en  elemento seccion(container) del DOM el contenedor(div) que contiene la imagen de la pelicula
-    })
+    });
 
 }
 
@@ -114,6 +118,7 @@ function createCategories(categories, container) {
 
 }
 
+
 //CON AXIOS
 //FUNCION QUE CONSUME LA API QUE TRAE EL LISTADO DE IMAGENES DE LAS 20 PELICULAS QUE SON TENDENCIA DE MANERA HORIZONTAL
 async function getTrendingMoviesPreview() {
@@ -123,6 +128,7 @@ async function getTrendingMoviesPreview() {
     //const data = await res.json();//esta linea sobra por que axios ya nos parsea el resultado a formato json como se observa en la linea (44)
     const movies = data.results;
     console.log({ data, movies })
+    //createMovies(movies, getTrendingMoviesPreview)
     createMovies(movies, trendingMoviesPreviewList, true)//llamo a la funcion createMovies y le paso como parametro(la lista de 20 movies y 
     //el contenedor(trendingMoviesPreviewList)) y el parametro true que indica que a ese contenedor si se le aplica (lazyLoading)
 }
@@ -154,6 +160,7 @@ async function getTrendingMoviesPreview() {
     })
 }*/
 
+
 //CON AXIOS
 //FUNCION QUE CONSUME LA API QUE TRAE LAS CATEGORIAS PREVIAS DE PELICULA
 async function getCategoriesPreview() {
@@ -163,7 +170,7 @@ async function getCategoriesPreview() {
     //const data = await res.json();//esta linea sobra por que axios ya nos parsea el resultado a formato json como se observa en la linea (44)
     const categories = data.genres;
     console.log({ data, categories });
-    createCategories(categories,categoriesPreviewList)////llamo a la funcion createCategories y le paso como parametro(la lista de 20 movies y 
+    createCategories(categories,categoriesPreviewList)////llamo a la funcion createCategories y le paso como parametro(la lista de 20 movies y     
     //el contenedor(categoriesPreviewList))    
 }
 
