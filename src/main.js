@@ -213,13 +213,14 @@ async function getMoviesBySearch(query) {
     //const data = await res.json();//esta linea sobra por que axios ya nos parsea el resultado a formato json como se observa en la linea (44)
     const movies = data.results;//Obtenemos el resultado que retornado por el consumo de la api
     console.log({ data, movies})
-    createMovies(movies, genericSection)//llamo a la funcion createMovies y le paso como parametro(la lista de 20 movies y 
-    //el contenedor(genericSection) ---> contenedor que muestra la lista de imagenes de las 20 peliculas de forma vertical en el hash (#category=))
+    createMovies(movies, genericSection, true)//llamo a la funcion createMovies y le paso como parametro(la lista de 20 movies, el 
+    //contenedor(genericSection) ---> contenedor que muestra la lista de imagenes de las 20 peliculas de forma vertical en el hash (#category=)) y el
+    //y el parametro true que indica que si se aplica el (lazyLoader) es decir la carga perezosa del array de imagenes de peliculas.
 
 }
 
 //CON AXIOS
-//FUNCION QUE CONSUME EL API QUE TRAE LAS IMAGENES DE LAS 20 PELICULAS QUE SON TENDENCIA DE MANERA VERTICAL
+//FUNCION QUE CONSUME EL API QUE TRAE LAS IMAGENES DE LAS 20 PELICULAS QUE SON TENDENCIA DE MANERA VERTICAL (est vista se presenta al momento de dar click en el boton "Ver mas")
 async function getTrendingMovies() {
     //No es necesario colorcar 'https://api.themoviedb.org/3/' ni concatenar el API_KEY  ya que ya se encuentra en la instacia de axios (api)
     //Solo se coloca el recurso de la api que se quiere consumir ---> GET /trending/{media_type}/{time_window} ---> ('trending/movie/day')
@@ -227,8 +228,8 @@ async function getTrendingMovies() {
     //const data = await res.json();//esta linea sobra por que axios ya nos parsea el resultado a formato json como se observa en la linea (44)
     const movies = data.results;
     console.log({ data, movies })
-    createMovies(movies, genericSection)//llamo a la funcion createMovies y le paso como parametro(la lista de 20 movies y 
-    //el contenedor(genericSection))
+    createMovies(movies, genericSection,true)//llamo a la funcion createMovies y le paso como parametro(la lista de 20 movies, el contenedor(genericSection)) y
+    // el parametro true que indica quue si se aplica el (lazyLoader) es decir la carga perezosa del array de imagenes de peliculas
 }
 
 //CON AXIOS
@@ -259,14 +260,15 @@ async function getMoviesById(movieId){
 }
 
 //CON AXIOS
-//FUNCION QUE CONUME EL API QUE RETORNA EL LISTADO DE PELICULAS SIMILARES(RECOMENDADAS) DE UNA PELICULA A PARTIR DEL (ID DE LA PELICULA)
+//FUNCION QUE CONUME EL API QUE RETORNA EL LISTADO DE PELICULAS SIMILARES(RECOMENDADAS) DE UNA PELICULA A PARTIR DEL (ID DE LA PELICULA) de manera horizantal 
 async function getRelatedMoviesId(movieId){
     //No es necesario colorcar 'https://api.themoviedb.org/3/' ni concatenar el API_KEY  ya que ya se encuentra en la instacia de axios (api)
     //Solo se coloca el recurso de la api que se quiere consumir ---> GET /movie/{movie_id}/recommendations
     const { data } = await api(`movie/${movieId}/recommendations`);
     const relatedMovies = data.results //variable que guarda un array con cada uno de los objetos(es decir cada objeto es una pelicula recomendada)
-    //llamo a la funcion crea las peliculas y le paso como parametro las lista de peliculas recomendadas y el contenedor donde va a poner esas peliculas recomendadas en la vista de detalle pelicula
-    createMovies(relatedMovies,relatedMoviesContainer)
+    //llamo a la funcion crea las peliculas y le paso como parametro las lista de peliculas recomendadas, el contenedor donde va a poner esas peliculas recomendadas en la vista de detalle pelicula y
+    //el parametro true que indica que si se aplica el (lazyLoader) es decir la carga perezosa del array de imagenes de peliculas
+    createMovies(relatedMovies,relatedMoviesContainer,true)
 }
 
 //getTrendingMoviesPreview();
