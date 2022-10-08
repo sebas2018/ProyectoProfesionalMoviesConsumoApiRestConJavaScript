@@ -5,6 +5,7 @@ console.log('API URL= https://fgdsgdsgdsfgds.com/dfsfsdf?api_key='+API_KEY)*/
 
 
 //creamos una instancia de axios
+
 const api = axios.create({
     baseURL: 'https://api.themoviedb.org/3/',// URL Base para solictude a las Apis
     headers: {
@@ -12,7 +13,7 @@ const api = axios.create({
     },
     params: {
         'api_key': API_KEY,//Api_key (autorizacion)
-    }
+    },
 });
 
 //SIN AXIOS
@@ -129,7 +130,7 @@ async function getTrendingMoviesPreview() {
     const movies = data.results;
     console.log({ data, movies })
     //createMovies(movies, getTrendingMoviesPreview)
-    createMovies(movies, trendingMoviesPreviewList, true)//llamo a la funcion createMovies y le paso como parametro(la lista de 20 movies y 
+    createMovies(movies,trendingMoviesPreviewList,true)//llamo a la funcion createMovies y le paso como parametro(la lista de 20 movies y 
     //el contenedor(trendingMoviesPreviewList)) y el parametro true que indica que a ese contenedor si se le aplica (lazyLoading)
 }
 
