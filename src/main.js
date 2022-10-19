@@ -48,7 +48,7 @@ const api = axios.create({
 //Observo todo el documento HTML para lo cual omito el parametro es decir el objeto de opciones
 //al (IntersectionObserver) solo le pasamos como parametro el  (callback) omitiendo el parametro de opciones, ya que este lazyloader se va a utilizar para todas 
 //las imagenes de todos los contenedores posibles.En el caso de que por cada contenedor de imagenes se quiera crear un lazyloader tambien se puede hacer pero tendria 
-//que psara el parametro de (options) al IntersectionObserver(callback, options)
+//que pasar el parametro de (options) al IntersectionObserver(callback, options)
 //Los (enries) son cada uno de los elemntos HTML que el usuario esta observando dentro del ViewPort, es decir, son cada una de las imagenes
 //--------------------------CREO EL OBSERVADOR (LAZYLOADER)----------------------------------------------------------
 const lazyLoader = new IntersectionObserver((entries) => {//por cada uno de los elementos de estas (entries -> esto es un array de entries) Hagamos algo
@@ -70,9 +70,17 @@ const lazyLoader = new IntersectionObserver((entries) => {//por cada uno de los 
 //recibo como parametros el array de las 20 peliculas y el contenedor de donde se deden insertar() esas peliculas, ademas recibe el parametro (true o false)
 //dependiendo si se quiere que se aplique (lazyLoading)
 //function createMovies(movies, container)function createMovies(movies, container) {
-function createMovies(movies, container, lazyLoad = false) {
-    container.innerHTML = "";//limpiamos nuestras secciones para evitar errores de duplicados de las api que retorna las 20 peliculas
-    // y la api que retorna las categorias de peliculas al momento de nabegar entre las diferentes vistas
+//function createMovies(movies, container, lazyLoad = false) {
+//function createMovies(movies, container, lazyLoad = false, clean = true) { // no es bueno pasar tanto parametro como valores true o false, es mejor pasarlo como un objeto
+function createMovies(movies, container, {lazyLoad = false, clean = true}={}) { // despues de la tercer coma recibimos un solo parametro que es un objeto
+    // con dos propiedades (lazyLoad y clean) y el (={}) es para indicar que ese parametro que en forma de objeto tambien puede llegar vacio o en el caso
+    // que solo se envie en el objeto una sola propiedad
+    if(clean){ // preguntamos si tiene que limpiar o no los resultados de peliculas, es decir si es true (limpia el contenedor) y si es false (no limpia el contenedor)
+        container.innerHTML = "";//limpiamos nuestras secciones para evitar errores de duplicados de las api que retorna las 20 peliculas
+    // y la api que retorna las categorias de peliculas al momento de navegar entre las diferentes vistas
+
+    }
+    
     movies.forEach(movie => { //por cada una de las peliculas que estemos agregando el forEach hay que llamar al observador de esa pelicula para agregarla
         const movieContainer = document.createElement('div');//creo el div que va a contener la imagen de la pelicula
         movieContainer.classList.add('movie-container')// le agrego al div la class="movie-container"
@@ -135,7 +143,8 @@ async function getTrendingMoviesPreview() {
     console.log({ data, movies })
     //createMovies(movies, getTrendingMoviesPreview)
     createMovies(movies,trendingMoviesPreviewList,true)//llamo a la funcion createMovies y le paso como parametro(la lista de 20 movies y 
-    //el contenedor(trendingMoviesPreviewList)) y el parametro true que indica que a ese contenedor si se le aplica (lazyLoading)
+    //el contenedor(trendingMoviesPreviewList)) y el parametro true que indica que a ese contenedor si se le aplica (lazyLoading)    
+
 }
 
 //SIN AXIOS
@@ -228,8 +237,52 @@ async function getTrendingMovies() {
     //const data = await res.json();//esta linea sobra por que axios ya nos parsea el resultado a formato json como se observa en la linea (44)
     const movies = data.results;
     console.log({ data, movies })
-    createMovies(movies, genericSection,true)//llamo a la funcion createMovies y le paso como parametro(la lista de 20 movies, el contenedor(genericSection)) y
-    // el parametro true que indica quue si se aplica el (lazyLoader) es decir la carga perezosa del array de imagenes de peliculas
+    //createMovies(movies, genericSection,true)
+    createMovies(movies, genericSection,{lazyLoad:true, clean:true})//llamo a la funcion createMovies y le paso como parametro(la lista de 20 movies, el contenedor(genericSection)) y
+    // el objeto que contiene dos propiedades ({lazyLoad:true, clean:true})  la primera propiedad indica que si se aplica el (lazyLoader) es decir la carga perezosa
+    // del array de imagenes de peliculas y la segunda propiedad indica que si se limpia el contenedor que muestra las imagenes de peliculas que son tendencia de forma vertical
+    const btnLoadMore = document.createElement('button');//creo el boton al cual se le hara click para cragar mas imagenes de peliculas que son tendencia
+    btnLoadMore.innerText = 'Load more';//texto del boton cargar mas(load more)   
+    genericSection.appendChild(btnLoadMore)//inserto el boton en la seccion (genericSection).appendChild() Es uno de los métodos fundamentales de la programación web usando el DOM. 
+    //El método appendChild() inserta un nuevo nodo dentro de la estructura DOM de un documento, y es la segunda parte del proceso central uno-dos, 
+    //crear-y-añadir para construir páginas web a base de programación.
+    btnLoadMore.addEventListener('click', getPaginatedTrendingMovies)//al boton le adiciono un detector de eventos cada ves que hagamos 'click' al boton (Load more)
+    // para que llame a la funcion (getPaginatedTrendingMovies())
+}
+
+let page =1;// variable que lleva el control de las paginaciones
+
+//CON AXIOS
+//FUNCION QUE TRAE LAS PELICULAS QUE SON TENDENCIA DE MANERA VERTICAL SEGUN EL PARAMETRO DE PAGINACION
+async function getPaginatedTrendingMovies(){
+    page++;//cada ves que llaman a esta funcion --> page incrementa en 1, de esta manera se lleva el control de las paginaciones para que sea dinamico
+    //No es necesario colorcar 'https://api.themoviedb.org/3/' ni concatenar el API_KEY  ya que ya se encuentra en la instacia de axios (api)
+    //Solo se coloca el recurso de la api que se quiere consumir ---> GET /trending/{media_type}/{time_window} ---> ('trending/movie/day')
+    const { data } = await api('trending/movie/day',{
+        params:{
+           // page: 2// LE ESPECIFICO QUE SE TRAIGA LAS PELICULAS QUE SON TENDENCIA DE LA PAGINACION 2
+           page
+        }
+    });
+    //const data = await res.json();//esta linea sobra por que axios ya nos parsea el resultado a formato json como se observa en la linea (44)
+    const movies = data.results;
+    console.log({ data, movies })
+    //createMovies(movies, genericSection,true,false)
+    createMovies(movies, genericSection,{lazyLoad:true, clean:false})//llamo a la funcion createMovies y le paso como parametro(la lista de 20 movies, el contenedor(genericSection)) y
+    // el parametro true que indica quue si se aplica el (lazyLoader) es decir la carga perezosa del array de imagenes de peliculas y tambien le paso el parametro false
+    //que indica que no se limpia el contenedor que muestra las peliculas que son tendencia de forma vertical con el fin de que se muestre el acumulado de las imagenes
+    //de peliculas de las respectivas paginaciones, recuerde que cada paginacion tiene una lista de imagenes de peliculas que son tendencia.En base a lo anterior cuando
+    //haga click en el boton (Load more) no me van a desaparecer imagenes de peliculas de la paginacion inicial sino que las conserva y muestra las imagenes de peliculas
+    //que son tendencia de la siguiente paginacion y asi sucesivamente.
+    //cada ves que se llame esta funcion vuelvo y creo el boton
+    const btnLoadMore = document.createElement('button');//creo el boton al cual se le hara click para cragar mas imagenes de peliculas que son tendencia
+    btnLoadMore.innerText = 'Load more';//texto del boton cargar mas(load more)   
+    genericSection.appendChild(btnLoadMore)//inserto el boton en la seccion (genericSection).appendChild() Es uno de los métodos fundamentales de la programación web usando el DOM. 
+    //El método appendChild() inserta un nuevo nodo dentro de la estructura DOM de un documento, y es la segunda parte del proceso central uno-dos, 
+    //crear-y-añadir para construir páginas web a base de programación.
+    btnLoadMore.addEventListener('click', getPaginatedTrendingMovies)//al boton le adiciono un detector de eventos cada ves que hagamos 'click' al boton (Load more)
+    // para que llame a la funcion (getPaginatedTrendingMovies())
+
 }
 
 //CON AXIOS
