@@ -241,21 +241,29 @@ async function getTrendingMovies() {
     createMovies(movies, genericSection,{lazyLoad:true, clean:true})//llamo a la funcion createMovies y le paso como parametro(la lista de 20 movies, el contenedor(genericSection)) y
     // el objeto que contiene dos propiedades ({lazyLoad:true, clean:true})  la primera propiedad indica que si se aplica el (lazyLoader) es decir la carga perezosa
     // del array de imagenes de peliculas y la segunda propiedad indica que si se limpia el contenedor que muestra las imagenes de peliculas que son tendencia de forma vertical
+   
+   /* COMENTAREO EL CODIGO DEL BOTON YA QUE LA IDEA ES QUE EL USARIO NO TENGA QUE HACER CLICK EN EL BOTON (Load more) PARA VER LA SIGUIENTE PAGINACION DE PELICULAS QUE SON TENDENCIA
     const btnLoadMore = document.createElement('button');//creo el boton al cual se le hara click para cragar mas imagenes de peliculas que son tendencia
     btnLoadMore.innerText = 'Load more';//texto del boton cargar mas(load more)   
     genericSection.appendChild(btnLoadMore)//inserto el boton en la seccion (genericSection).appendChild() Es uno de los métodos fundamentales de la programación web usando el DOM. 
     //El método appendChild() inserta un nuevo nodo dentro de la estructura DOM de un documento, y es la segunda parte del proceso central uno-dos, 
     //crear-y-añadir para construir páginas web a base de programación.
     btnLoadMore.addEventListener('click', getPaginatedTrendingMovies)//al boton le adiciono un detector de eventos cada ves que hagamos 'click' al boton (Load more)
-    // para que llame a la funcion (getPaginatedTrendingMovies())
+    // para que llame a la funcion (getPaginatedTrendingMovies())*/
 }
 
-let page =1;// variable que lleva el control de las paginaciones
+//let page = 1;// variable que lleva el control de las paginaciones
+//window.addEventListener('scroll',getPaginatedTrendingMovies)//llamo a window y escucho cualquier evento que sea de tipo scroll que realice el usuario 
+// y llamo a la funcion (getPaginatedTrendingMovies()) que consume la api que trae la lista de imagenes de peliculas que son tendencia de forma vertical segun el numero de paginacion
 
 //CON AXIOS
 //FUNCION QUE TRAE LAS PELICULAS QUE SON TENDENCIA DE MANERA VERTICAL SEGUN EL PARAMETRO DE PAGINACION
 async function getPaginatedTrendingMovies(){
-    page++;//cada ves que llaman a esta funcion --> page incrementa en 1, de esta manera se lleva el control de las paginaciones para que sea dinamico
+    //document.documentElement.scrollTop+document.documentElement.clientHeight >= document.documentElement.scrollHeight    
+    const {scrollTop,clientHeight,scrollHeight} = document.documentElement;//creo una constante y destructuro todo lo que venda de (documentElement)
+    const scrollIsBottom = (scrollTop+clientHeight)>= (scrollHeight - 15); //el scroll realizado por el usuario llego al final
+    if(scrollIsBottom){//pregunto si el scroll realizado por el usuario llego al final
+        page++;//cada ves que llaman a esta funcion --> page incrementa en 1, de esta manera se lleva el control de las paginaciones para que sea dinamico
     //No es necesario colorcar 'https://api.themoviedb.org/3/' ni concatenar el API_KEY  ya que ya se encuentra en la instacia de axios (api)
     //Solo se coloca el recurso de la api que se quiere consumir ---> GET /trending/{media_type}/{time_window} ---> ('trending/movie/day')
     const { data } = await api('trending/movie/day',{
@@ -274,6 +282,11 @@ async function getPaginatedTrendingMovies(){
     //de peliculas de las respectivas paginaciones, recuerde que cada paginacion tiene una lista de imagenes de peliculas que son tendencia.En base a lo anterior cuando
     //haga click en el boton (Load more) no me van a desaparecer imagenes de peliculas de la paginacion inicial sino que las conserva y muestra las imagenes de peliculas
     //que son tendencia de la siguiente paginacion y asi sucesivamente.
+
+    }   
+    
+    //EL CODIGO DEL BOTON LO COMENTAREO YA QUE NO QUIERO QUE ME APARESCA POR ENDE EN LA FUNCION (getTrendingMovies()) TAMBIEN DEBO COMENTAREA EL EVENTO DEL BOTON
+    /*
     //cada ves que se llame esta funcion vuelvo y creo el boton
     const btnLoadMore = document.createElement('button');//creo el boton al cual se le hara click para cragar mas imagenes de peliculas que son tendencia
     btnLoadMore.innerText = 'Load more';//texto del boton cargar mas(load more)   
@@ -281,7 +294,7 @@ async function getPaginatedTrendingMovies(){
     //El método appendChild() inserta un nuevo nodo dentro de la estructura DOM de un documento, y es la segunda parte del proceso central uno-dos, 
     //crear-y-añadir para construir páginas web a base de programación.
     btnLoadMore.addEventListener('click', getPaginatedTrendingMovies)//al boton le adiciono un detector de eventos cada ves que hagamos 'click' al boton (Load more)
-    // para que llame a la funcion (getPaginatedTrendingMovies())
+    // para que llame a la funcion (getPaginatedTrendingMovies())*/
 
 }
 

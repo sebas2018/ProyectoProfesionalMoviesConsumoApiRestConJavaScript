@@ -1,3 +1,5 @@
+let page = 1;// variable que lleva el control de las paginaciones
+
 //escucho cuando le dan click a este boton de busqueda para que nos lleve a la vista del hash (#search=)
 searchFormBtn.addEventListener('click', ()=>{
     //capturo el valor que ingresa el usuario en el input como parametros para buscar la pelicula de su interes y se lo concateno al hash (#search=)
@@ -18,6 +20,10 @@ arrowBtn.addEventListener('click', ()=>{
 
 window.addEventListener('DOMContentLoaded', navigator, false);//llamamos a la funcion a ejecutarse(navigator) cuando crague por primera ves la aplicacion
 window.addEventListener('hashchange', navigator, false);//llamamos a la funcion a ejecutarse(navigator) cada ves que cambie el hash
+window.addEventListener('scroll',getPaginatedTrendingMovies)//llamo a window y escucho cualquier evento que sea de tipo scroll que realice el usuario 
+// y llamo a la funcion (getPaginatedTrendingMovies()) que consume la api que trae la lista de imagenes de peliculas que son tendencia de forma vertical segun el numero de paginacion
+
+
 //Esta funcion se crear para llamar a todas las funciones implementadas en main.js desde aca
 //de esta manera no tenemos que llamarlas en el archivo (main.js)
 //Esta funcion la llamo cuando cargue mi aplicacion y cada ves que cambie el hash
