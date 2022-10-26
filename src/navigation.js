@@ -1,4 +1,5 @@
 let page = 1;// variable que lleva el control de las paginaciones
+let infiniteScroll;
 
 //escucho cuando le dan click a este boton de busqueda para que nos lleve a la vista del hash (#search=)
 searchFormBtn.addEventListener('click', ()=>{
@@ -20,8 +21,9 @@ arrowBtn.addEventListener('click', ()=>{
 
 window.addEventListener('DOMContentLoaded', navigator, false);//llamamos a la funcion a ejecutarse(navigator) cuando crague por primera ves la aplicacion
 window.addEventListener('hashchange', navigator, false);//llamamos a la funcion a ejecutarse(navigator) cada ves que cambie el hash
-window.addEventListener('scroll',getPaginatedTrendingMovies)//llamo a window y escucho cualquier evento que sea de tipo scroll que realice el usuario 
-// y llamo a la funcion (getPaginatedTrendingMovies()) que consume la api que trae la lista de imagenes de peliculas que son tendencia de forma vertical segun el numero de paginacion
+/*window.addEventListener('scroll',getPaginatedTrendingMovies)//llamo a window y escucho cualquier evento que sea de tipo scroll que realice el usuario 
+// y llamo a la funcion (getPaginatedTrendingMovies()) que consume la api que trae la lista de imagenes de peliculas que son tendencia de forma vertical segun el numero de paginacion*/
+window.addEventListener('scroll',infiniteScroll,false);//llamos a la variable (infiniteScroll) que en este primer llamado no contiene ningun valor
 
 
 //Esta funcion se crear para llamar a todas las funciones implementadas en main.js desde aca
@@ -29,6 +31,13 @@ window.addEventListener('scroll',getPaginatedTrendingMovies)//llamo a window y e
 //Esta funcion la llamo cuando cargue mi aplicacion y cada ves que cambie el hash
 function navigator() {
     console.log({ location });
+    //cada ves que se ejecute la funcion navigator() pregunto si infiniteScroll tiene algun valor de algo, si tiene un valor (true) procedo a quitar ese valor,
+    // es decir quito el evento(listener) de scroll para poderlo cambiar
+    if(infiniteScroll){
+        window.removeEventListener('scroll', infiniteScroll,{passive:false});// quito el evento de scroll
+        infiniteScroll = undefined//
+
+    }
 
     if (location.hash.startsWith('#trends')) { // verifico si el hash empieza por (#trends)
         //console.log('entroa a la seccion de trends')
@@ -50,6 +59,13 @@ function navigator() {
     ////ScrollTop de 0 para que siempre aperesca al inicio y no al final de la lista de imagenes de las 20 peliculas
     document.body.scrollTop = 0;
     document.documentElement.scrollTop = 0;
+
+    //Si en alguna de las funciones de la linea 44,47,50,53 y 56 vamos a estar llamando a la variable (infiniteScroll) para asignarle algun resultado 
+    //por lo que tengo que preguntar si en alguna de esas funcione se garego la variable (infiniteScroll) entonces llamo a la variable (infiniteScroll) que tiene almacenada
+    //la funcion getPaginatedTrendingMovies que es la FUNCION QUE TRAE LAS PELICULAS QUE SON TENDENCIA DE MANERA VERTICAL SEGUN EL PARAMETRO DE PAGINACION con Scroll infinito
+    if(infiniteScroll){
+        window.addEventListener('scroll', infiniteScroll,{passive:false});
+    }
 }
 
 //funcion que habilita todos los elementos de la vista principal
@@ -173,4 +189,6 @@ function trendsPage() {
     movieDetailSection.classList.add('inactive')//inactivo la seccion (movieDetailSection) ya que no se requiere mostrar los detalles de la pelicula
     headerCategoryTitle.innerHTML = "Tendencias";
     getTrendingMovies();//llamos a la funcion que consume el api que retorna las imagenes de las 20 peliculas de forma vertical.
+    infiniteScroll = getPaginatedTrendingMovies // cada ves que se cargue la vista de tendencias dijo que infiniteScroll = getPaginatedTrendingMovies()  que es el nombre de la funcion
+    // que requiero que se ejecute cuando se llegue al final del scroll 
 }
