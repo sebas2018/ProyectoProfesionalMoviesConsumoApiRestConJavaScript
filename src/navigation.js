@@ -1,3 +1,4 @@
+let maxPage;// no le asigno ningun valor ya que el valor se lo asigno en la funcion getTrendingMovies()
 let page = 1;// variable que lleva el control de las paginaciones
 let infiniteScroll;
 
@@ -90,6 +91,7 @@ function homePage() {
     //siempre en la vista principal de debe llamar las siguiente funciones:
     getTrendingMoviesPreview();//funcion que consume la api que retorna la lista de imagenes de las 20 peliculas en horizontal
     getCategoriesPreview();//funcion que consume la api que retorna la lista de categrias
+     
 }
 
 //funcion que habilita todos los elementos de la vista del hash --> #category=
@@ -119,6 +121,8 @@ function categoryPage() {
     // la primera el (id de la categoria) --> 16 y la segunda el (nombre de la categoria) --> (Animation)
     headerCategoryTitle.innerHTML = categoryNewName;//le colocamos el texto del genero de pelicula al titulo
     getMoviesByCategory(categoryId);//llamamos a la funcion que consume la api que retorna las peliculas de una categoria a partir del (id de la categoria)
+    infiniteScroll = getPaginatedTrendingMovies // cada ves que se cargue la vista de tendencias dijo que infiniteScroll = getPaginatedTrendingMovies()  que es el nombre de la funcion
+    // que requiero que se ejecute cuando se llegue al final del scroll 
     
 }
 
@@ -141,6 +145,8 @@ function movieDetailsPage() {
     //['#movie', '21654']
     const [_,movieId] = location.hash.split('=');//capturo el id de la pelicula del hash -->#movie=610150
     getMoviesById(movieId);//llamo a la funcion getMoviesById() y le paso el parmetro (movieId) ---> esta funcion consume el api que retorna el detalle de la pelicula segun el id de la pelicula
+    
+    
 }
 
 //funcion que habilita todos los elementos de la vista del hash --> #search=
@@ -167,6 +173,10 @@ function searchPage() {
     const query = decodeURI(location.hash.split("=")[1]);//hace lo mismo que la linea anterior pero es mas precisa cuando el usario usa un parametro de busqueda de la pelicula con una palabra compuesta como "the batman"
 
     getMoviesBySearch(query);//llamo a la funcion que consume el Api que retorna el resultado de las peliculas buscada por el parametro de entrada del usuario en el input del search de la vista principal
+    //infiniteScroll = getPaginatedTrendingMovies // cada ves que se cargue la vista de tendencias dijo que infiniteScroll = getPaginatedTrendingMovies()  que es el nombre de la funcion
+    // que requiero que se ejecute cuando se llegue al final del scroll 
+    infiniteScroll = getPaginatedMoviesBySearch(query);// cada ves que se cargue la vista de tendencias dijo que infiniteScroll = getPaginatedMoviesBySearch(query)  que es el nombre de la funcion
+    // que requiero que se ejecute cuando se llegue al final del scroll
 
 }
 

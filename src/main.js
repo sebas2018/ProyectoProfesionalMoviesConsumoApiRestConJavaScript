@@ -143,7 +143,8 @@ async function getTrendingMoviesPreview() {
     console.log({ data, movies })
     //createMovies(movies, getTrendingMoviesPreview)
     createMovies(movies,trendingMoviesPreviewList,true)//llamo a la funcion createMovies y le paso como parametro(la lista de 20 movies y 
-    //el contenedor(trendingMoviesPreviewList)) y el parametro true que indica que a ese contenedor si se le aplica (lazyLoading)    
+    //el contenedor(trendingMoviesPreviewList)) y el parametro true que indica que a ese contenedor si se le aplica (lazyLoading)  
+    
 
 }
 
@@ -221,12 +222,64 @@ async function getMoviesBySearch(query) {
     });
     //const data = await res.json();//esta linea sobra por que axios ya nos parsea el resultado a formato json como se observa en la linea (44)
     const movies = data.results;//Obtenemos el resultado que retornado por el consumo de la api
+    maxPage = data.total_pages;
+    console.log('maxPage',maxPage)
     console.log({ data, movies})
     createMovies(movies, genericSection, true)//llamo a la funcion createMovies y le paso como parametro(la lista de 20 movies, el 
     //contenedor(genericSection) ---> contenedor que muestra la lista de imagenes de las 20 peliculas de forma vertical en el hash (#category=)) y el
     //y el parametro true que indica que si se aplica el (lazyLoader) es decir la carga perezosa del array de imagenes de peliculas.
 
+
 }
+
+//CON AXIOS
+//FUNCION QUE TRAE LAS PELICULAS QUE SON TENDENCIA DE MANERA VERTICAL SEGUN EL PARAMETRO DE PAGINACION
+function getPaginatedMoviesBySearch(query){
+   return async function () {
+     //document.documentElement.scrollTop+document.documentElement.clientHeight >= document.documentElement.scrollHeight    
+     const {scrollTop,clientHeight,scrollHeight} = document.documentElement;//creo una constante y destructuro todo lo que venda de (documentElement)
+     const scrollIsBottom = (scrollTop+clientHeight)>= (scrollHeight - 15); //el scroll realizado por el usuario llego al final
+     const pageIsNotmax = page < maxPage // preguntamos si la pagina en que estamos es < maxPage proceda con el scroll infinito
+     if(scrollIsBottom && pageIsNotmax){//pregunto si el scroll realizado por el usuario llego al final y si la variable (pageIsNotmax) es true
+         page++;//cada ves que llaman a esta funcion --> page incrementa en 1, de esta manera se lleva el control de las paginaciones para que sea dinamico    
+     //No es necesario colorcar 'https://api.themoviedb.org/3/' ni concatenar el API_KEY  ya que ya se encuentra en la instacia de axios (api)
+     //Solo se coloca el recurso de la api que se quiere consumir --> GET ('/search/movie')    
+     const { data } = await api('search/movie', {
+         params: {
+             query: query,// se pasa como parametro el (query) que es el dato ingresado por el usuario en el input del search
+             //query,//cuando el parametro se escribe igual que el valor, solo basta con colocar el parametro seguido de una coma
+             page,
+         },
+     });
+        
+     //const data = await res.json();//esta linea sobra por que axios ya nos parsea el resultado a formato json como se observa en la linea (44)
+     const movies = data.results;    
+     console.log({ data, movies })
+     //createMovies(movies, genericSection,true,false)
+     createMovies(movies, genericSection,{lazyLoad:true, clean:false})//llamo a la funcion createMovies y le paso como parametro(la lista de 20 movies, el contenedor(genericSection)) y
+     // el parametro true que indica quue si se aplica el (lazyLoader) es decir la carga perezosa del array de imagenes de peliculas y tambien le paso el parametro false
+     //que indica que no se limpia el contenedor que muestra las peliculas que son tendencia de forma vertical con el fin de que se muestre el acumulado de las imagenes
+     //de peliculas de las respectivas paginaciones, recuerde que cada paginacion tiene una lista de imagenes de peliculas que son tendencia.En base a lo anterior cuando
+     //haga click en el boton (Load more) no me van a desaparecer imagenes de peliculas de la paginacion inicial sino que las conserva y muestra las imagenes de peliculas
+     //que son tendencia de la siguiente paginacion y asi sucesivamente.
+ 
+     }   
+     
+     //EL CODIGO DEL BOTON LO COMENTAREO YA QUE NO QUIERO QUE ME APARESCA POR ENDE EN LA FUNCION (getTrendingMovies()) TAMBIEN DEBO COMENTAREA EL EVENTO DEL BOTON
+     /*
+     //cada ves que se llame esta funcion vuelvo y creo el boton
+     const btnLoadMore = document.createElement('button');//creo el boton al cual se le hara click para cragar mas imagenes de peliculas que son tendencia
+     btnLoadMore.innerText = 'Load more';//texto del boton cargar mas(load more)   
+     genericSection.appendChild(btnLoadMore)//inserto el boton en la seccion (genericSection).appendChild() Es uno de los métodos fundamentales de la programación web usando el DOM. 
+     //El método appendChild() inserta un nuevo nodo dentro de la estructura DOM de un documento, y es la segunda parte del proceso central uno-dos, 
+     //crear-y-añadir para construir páginas web a base de programación.
+     btnLoadMore.addEventListener('click', getPaginatedTrendingMovies)//al boton le adiciono un detector de eventos cada ves que hagamos 'click' al boton (Load more)
+     // para que llame a la funcion (getPaginatedTrendingMovies())*/
+   }
+
+}
+
+
 
 //CON AXIOS
 //FUNCION QUE CONSUME EL API QUE TRAE LAS IMAGENES DE LAS 20 PELICULAS QUE SON TENDENCIA DE MANERA VERTICAL (est vista se presenta al momento de dar click en el boton "Ver mas")
@@ -235,7 +288,9 @@ async function getTrendingMovies() {
     //Solo se coloca el recurso de la api que se quiere consumir ---> GET /trending/{media_type}/{time_window} ---> ('trending/movie/day')
     const { data } = await api('trending/movie/day');
     //const data = await res.json();//esta linea sobra por que axios ya nos parsea el resultado a formato json como se observa en la linea (44)
-    const movies = data.results;
+    const movies = data.results; 
+    maxPage = data.total_pages// esta variable max_page se accede desde cualquier parte de la aplicacion, esta variable contiene el total de paginaciones de peliculas
+    console.log('Total de paginas = '+data.total_pages)//imprimimos el total de paginas existentes de peliculas  
     console.log({ data, movies })
     //createMovies(movies, genericSection,true)
     createMovies(movies, genericSection,{lazyLoad:true, clean:true})//llamo a la funcion createMovies y le paso como parametro(la lista de 20 movies, el contenedor(genericSection)) y
@@ -262,7 +317,8 @@ async function getPaginatedTrendingMovies(){
     //document.documentElement.scrollTop+document.documentElement.clientHeight >= document.documentElement.scrollHeight    
     const {scrollTop,clientHeight,scrollHeight} = document.documentElement;//creo una constante y destructuro todo lo que venda de (documentElement)
     const scrollIsBottom = (scrollTop+clientHeight)>= (scrollHeight - 15); //el scroll realizado por el usuario llego al final
-    if(scrollIsBottom){//pregunto si el scroll realizado por el usuario llego al final
+    const pageIsNotmax = page < maxPage // preguntamos si la pagina en que estamos es < maxPage proceda con el scroll infinito
+    if(scrollIsBottom && pageIsNotmax){//pregunto si el scroll realizado por el usuario llego al final y si la variable (pageIsNotmax) es true
         page++;//cada ves que llaman a esta funcion --> page incrementa en 1, de esta manera se lleva el control de las paginaciones para que sea dinamico
     //No es necesario colorcar 'https://api.themoviedb.org/3/' ni concatenar el API_KEY  ya que ya se encuentra en la instacia de axios (api)
     //Solo se coloca el recurso de la api que se quiere consumir ---> GET /trending/{media_type}/{time_window} ---> ('trending/movie/day')
@@ -273,7 +329,7 @@ async function getPaginatedTrendingMovies(){
         }
     });
     //const data = await res.json();//esta linea sobra por que axios ya nos parsea el resultado a formato json como se observa en la linea (44)
-    const movies = data.results;
+    const movies = data.results;    
     console.log({ data, movies })
     //createMovies(movies, genericSection,true,false)
     createMovies(movies, genericSection,{lazyLoad:true, clean:false})//llamo a la funcion createMovies y le paso como parametro(la lista de 20 movies, el contenedor(genericSection)) y
@@ -322,6 +378,7 @@ async function getMoviesById(movieId){
     createCategories(movieDetail.genres,movieDetailCategoriesList)
     //pongo las peliculas recomendadas de una pelicula en la vista detalle de pelicula
     getRelatedMoviesId(movieId)//llamo a la funcion que consume el api que retorna las imagenes de las peliculas relacionadas(recomendadas) de manera horizontal
+   
 
 }
 
@@ -335,6 +392,7 @@ async function getRelatedMoviesId(movieId){
     //llamo a la funcion crea las peliculas y le paso como parametro las lista de peliculas recomendadas, el contenedor donde va a poner esas peliculas recomendadas en la vista de detalle pelicula y
     //el parametro true que indica que si se aplica el (lazyLoader) es decir la carga perezosa del array de imagenes de peliculas
     createMovies(relatedMovies,relatedMoviesContainer,true)
+   
 }
 
 //getTrendingMoviesPreview();
