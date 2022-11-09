@@ -201,13 +201,62 @@ async function getMoviesByCategory(id) {
     });
     //const data = await res.json();//esta linea sobra por que axios ya nos parsea el resultado a formato json como se observa en la linea (44)
     const movies = data.results;
+    maxPage = data.total_pages;
+    console.log("maxPage = ",maxPage)
     console.log({ movies })
-    createMovies(movies, genericSection,true)//llamo a la funcion createMovies y le paso como parametro(la lista de 20 movies, 
+    createMovies(movies, genericSection,{lazyLoad:true})//llamo a la funcion createMovies y le paso como parametro(la lista de 20 movies, 
     //el contenedor(genericSection) ---> contenedor que muestra la lista de imagenes de las 20 peliculas de forma vertical en el hash (#category=))
     //y el valor de true que indica que se aplicara el (lazyLoading) para que solo cragen las imagenes del Viewport es decir las imagenes que el
     //usuario esta viendo en ese momento y a medidad que baje el scroll pues se van mostrando las otras imagenes de peliculas.
 
 }
+
+//CON AXIOS
+//FUNCION QUE CONSUME LA API QUE TRAE LAS PELICULAS DE UNA CATEGORIA
+function getPaginatedMoviesByCategory(id){
+    return async function () {
+      //document.documentElement.scrollTop+document.documentElement.clientHeight >= document.documentElement.scrollHeight    
+      const {scrollTop,clientHeight,scrollHeight} = document.documentElement;//creo una constante y destructuro todo lo que venda de (documentElement)
+      const scrollIsBottom = (scrollTop+clientHeight)>= (scrollHeight - 15); //el scroll realizado por el usuario llego al final
+      const pageIsNotmax = page < maxPage // preguntamos si la pagina en que estamos es < maxPage proceda con el scroll infinito
+      if(scrollIsBottom && pageIsNotmax){//pregunto si el scroll realizado por el usuario llego al final y si la variable (pageIsNotmax) es true
+          page++;//cada ves que llaman a esta funcion --> page incrementa en 1, de esta manera se lleva el control de las paginaciones para que sea dinamico    
+     //No es necesario colorcar 'https://api.themoviedb.org/3/' ni concatenar el API_KEY  ya que ya se encuentra en la instacia de axios (api)
+    //Solo se coloca el recurso de la api que se quiere consumir ---> GET ('/discover/movie')
+    const { data } = await api('discover/movie', {
+        params: {
+            with_genres: id,// se pasa como parametro el (id de la categoria) que sera enviado a nuestra movies
+            page,
+        },
+    });
+    //const data = await res.json();//esta linea sobra por que axios ya nos parsea el resultado a formato json como se observa en la linea (44)
+         
+      //const data = await res.json();//esta linea sobra por que axios ya nos parsea el resultado a formato json como se observa en la linea (44)
+      const movies = data.results;    
+      console.log({ data, movies })
+      //createMovies(movies, genericSection,true,false)
+      createMovies(movies, genericSection,{lazyLoad:true, clean:false})//llamo a la funcion createMovies y le paso como parametro(la lista de 20 movies, el contenedor(genericSection)) y
+      // el parametro true que indica quue si se aplica el (lazyLoader) es decir la carga perezosa del array de imagenes de peliculas y tambien le paso el parametro false
+      //que indica que no se limpia el contenedor que muestra las peliculas que son tendencia de forma vertical con el fin de que se muestre el acumulado de las imagenes
+      //de peliculas de las respectivas paginaciones, recuerde que cada paginacion tiene una lista de imagenes de peliculas que son tendencia.En base a lo anterior cuando
+      //haga click en el boton (Load more) no me van a desaparecer imagenes de peliculas de la paginacion inicial sino que las conserva y muestra las imagenes de peliculas
+      //que son tendencia de la siguiente paginacion y asi sucesivamente.
+  
+      }   
+      
+      //EL CODIGO DEL BOTON LO COMENTAREO YA QUE NO QUIERO QUE ME APARESCA POR ENDE EN LA FUNCION (getTrendingMovies()) TAMBIEN DEBO COMENTAREA EL EVENTO DEL BOTON
+      /*
+      //cada ves que se llame esta funcion vuelvo y creo el boton
+      const btnLoadMore = document.createElement('button');//creo el boton al cual se le hara click para cragar mas imagenes de peliculas que son tendencia
+      btnLoadMore.innerText = 'Load more';//texto del boton cargar mas(load more)   
+      genericSection.appendChild(btnLoadMore)//inserto el boton en la seccion (genericSection).appendChild() Es uno de los métodos fundamentales de la programación web usando el DOM. 
+      //El método appendChild() inserta un nuevo nodo dentro de la estructura DOM de un documento, y es la segunda parte del proceso central uno-dos, 
+      //crear-y-añadir para construir páginas web a base de programación.
+      btnLoadMore.addEventListener('click', getPaginatedTrendingMovies)//al boton le adiciono un detector de eventos cada ves que hagamos 'click' al boton (Load more)
+      // para que llame a la funcion (getPaginatedTrendingMovies())*/
+    }
+ 
+ }
 
 //CON AXIOS
 //FUNCION QUE CONSUME EL API QUE TRAE LAS PELICULAS SEGUN EL PARAMETRO DE BUSQUEDA INGRESADO POR EL USUARIO EN EL INPUT DEL SEARCH

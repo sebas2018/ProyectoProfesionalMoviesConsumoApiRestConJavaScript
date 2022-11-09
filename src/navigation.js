@@ -121,7 +121,7 @@ function categoryPage() {
     // la primera el (id de la categoria) --> 16 y la segunda el (nombre de la categoria) --> (Animation)
     headerCategoryTitle.innerHTML = categoryNewName;//le colocamos el texto del genero de pelicula al titulo
     getMoviesByCategory(categoryId);//llamamos a la funcion que consume la api que retorna las peliculas de una categoria a partir del (id de la categoria)
-    infiniteScroll = getPaginatedTrendingMovies // cada ves que se cargue la vista de tendencias dijo que infiniteScroll = getPaginatedTrendingMovies()  que es el nombre de la funcion
+    infiniteScroll = getPaginatedMoviesByCategory(categoryId); // cada ves que se cargue la vista de tendencias dijo que infiniteScroll = getPaginatedMoviesByCategory(categoryId)  que es el nombre de la funcion
     // que requiero que se ejecute cuando se llegue al final del scroll 
     
 }
