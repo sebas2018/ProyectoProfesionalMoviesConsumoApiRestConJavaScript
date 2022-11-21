@@ -78,21 +78,31 @@ function createMovies(movies, container, {lazyLoad = false, clean = true}={}) { 
     if(clean){ // preguntamos si tiene que limpiar o no los resultados de peliculas, es decir si es true (limpia el contenedor) y si es false (no limpia el contenedor)
         container.innerHTML = "";//limpiamos nuestras secciones para evitar errores de duplicados de las api que retorna las 20 peliculas
     // y la api que retorna las categorias de peliculas al momento de navegar entre las diferentes vistas
-
+    
     }
     
     movies.forEach(movie => { //por cada una de las peliculas que estemos agregando el forEach hay que llamar al observador de esa pelicula para agregarla
         const movieContainer = document.createElement('div');//creo el div que va a contener la imagen de la pelicula
         movieContainer.classList.add('movie-container')// le agrego al div la class="movie-container"
-        movieContainer.addEventListener('click',() => {
+        /*movieContainer.addEventListener('click',() => {
             location.hash = '#movie='+movie.id;//nos dirige a la vista del hash (#movie=) que es la vista de detalle pelicula y le concatenamos el id de la pelicula
-        });
+        });*/
         const movieImage = document.createElement('img'); // creo la imagen que va estar dentro del div(movieContainer)
         movieImage.classList.add('movie-img') //le agrego a la imgen la class="movie-img"
         movieImage.setAttribute('alt', movie.title)// agrego el atributo (alt) con su valor a la (img)
        // movieImage.setAttribute('src', 'https://image.tmdb.org/t/p/w300/' + movie.poster_path,);       
         //si (lazyLoad) es true entonces agrego la ruta de la imagen a 'data-img' y sino agrego la ruta a 'src'
-       movieImage.setAttribute(lazyLoad ? 'data-img':'src', 'https://image.tmdb.org/t/p/w300/' + movie.poster_path,);//agrego el atributo (src) con su valor    
+       movieImage.setAttribute(lazyLoad ? 'data-img':'src', 'https://image.tmdb.org/t/p/w300/' + movie.poster_path,);//agrego el atributo (src) con su valor  
+       movieImage.addEventListener('click',() => {
+        location.hash = '#movie='+movie.id;//nos dirige a la vista del hash (#movie=) que es la vista de detalle pelicula y le concatenamos el id de la pelicula
+        });
+       const movieBtn = document.createElement('button');  //creo el boton el cual el usuario va  apoder marcar o desdemarcar como pelicula favorita en la nueva seccion
+       movieBtn.classList.add('movie-btn'); // Agrego la clase al boton para cualquier seccion que tenga peliculas
+       movieBtn.addEventListener('click',() => {//Le adiciono al boton el evento (click) para que cuando el usuario le da clic a la pelicula esta se gurade en favortios
+        movieBtn.classList.toggle('movie-btn--liked');//cambia el estilo del boton para cuando el usuario le da click al boton
+        //AQUI VA EL CODIGO QUE AGREGA LA PELICULA AL LOCAL STORAGE
+       });
+       
         if(lazyLoad){//si el parametro (lazyLoad) es true agrego la imagen para que la observe mi (lazyLoader)
             lazyLoader.observe(movieImage);//llamo al observador de la pelicula para vigilarla, de esta manera agrego cada una de las imagenes al array de(entries)  
         }   
@@ -100,7 +110,8 @@ function createMovies(movies, container, {lazyLoad = false, clean = true}={}) { 
             //enviamos una imagen por defecto que se quiera mostrar cuando las imagenes de las peliculas no cargen
             movieImage.setAttribute('src','https://static.platzi.com/static/images/error/img404.png')
         })      
-        movieContainer.appendChild(movieImage)//agergo la imagen al div (movieContainer)        
+        movieContainer.appendChild(movieImage)//agergo la imagen al div (movieContainer)  
+        movieContainer.appendChild(movieBtn)//agrego el boton al div (movieContainer)      
         container.appendChild(movieContainer)//agrego en  elemento seccion(container) del DOM el contenedor(div) que contiene la imagen de la pelicula
     });
 

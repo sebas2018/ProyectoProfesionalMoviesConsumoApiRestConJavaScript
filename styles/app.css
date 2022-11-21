@@ -560,6 +560,17 @@ button {
   min-height: 175px;
 }
 
+.movie-btn{
+  position: absolute;
+  top: 5px;
+  right: 10px;
+  height:30px;
+  width:30px;
+  border-radius:30px;
+  padding:0;
+  margin:0;
+}
+
 .movie-btn {
   position: absolute;
   top: 5px;
@@ -571,7 +582,7 @@ button {
   margin: 0;
 }
 .movie-btn::before {
-  content: '🤍';
+  content: '❤️';
   /* font-size: 13px; */
 }
 .movie-btn--liked {
