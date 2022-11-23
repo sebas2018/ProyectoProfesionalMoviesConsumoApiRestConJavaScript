@@ -138,6 +138,7 @@ function createMovies(movies, container, { lazyLoad = false, clean = true } = {}
         movieBtn.addEventListener('click', () => {//Le adiciono al boton el evento (click) para que cuando el usuario le da clic a la pelicula esta se gurade en favortios
             movieBtn.classList.toggle('movie-btn--liked');//cambia el estilo del boton para cuando el usuario le da click al boton            
             likeMovie(movie);//funcion que guarda o elimina la pelicula del localStorage --> pasamos como parametro la pelicula
+            homePage();//para que se refresque el home principal y de esta manera cuando el usuario le de liked a una pelicula automaticamente se muestre en la seccion inferior de favoritos sin actualizar el navegador
         });
 
         if (lazyLoad) {//si el parametro (lazyLoad) es true agrego la imagen para que la observe mi (lazyLoader)
