@@ -85,6 +85,7 @@ function homePage() {
     categoriesPreviewSection.classList.remove('inactive')//activo la clase (categoriesPreview-container) del seccion del DOM que tiene (id="categoriesPreview") para que se muestre
     //ocultamos la seccion del DOM que tiene como (id="genericList") y que tiene como clase (genericList-container) ya que en la vista principal (home) 
     //la lista de peliculas se encuentra en horizontal y no en vertical
+    likedMoviesSection.classList.remove('inactive')// activo la seccion (likedMoviesSection) que contiene la seccion inferior de peliculas favoritas marcada por el usuario para se visible en el home
     genericSection.classList.add('inactive')
     //ocultamos la seccion del DOM que tiene como (id='movieDetail') y que tiene como clase (movieDetail-container) ya que en la vista principal(home) no se muestra el detalle de la pelicula con sus peliculas similares
     movieDetailSection.classList.add('inactive')
@@ -110,6 +111,7 @@ function categoryPage() {
     searchForm.classList.add('inactive')//oculto el formulario de busqueda en la vista de(category) ya que no se necesita
     trendingPreviewSection.classList.add('inactive')//oculto la seccion de la vista previa de tendencias (trendingPreview) ya que no se necesita en esta vista
     categoriesPreviewSection.classList.add('inactive')//oculto la seccion de la vista (categorias previas) ya que no se requiere.    
+    likedMoviesSection.classList.add('inactive')//oculto la seccion la seccion (likedMoviesSection) que contiene la seccion inferior de peliculas favoritas marcada por el usuario para no sea visible en esta seccion
     genericSection.classList.remove('inactive')//activo la seccion del DOM que tiene como (id="genericList") ya que se requiere mostrar las lista vertical de peliculas de una categoria
     //ocultamos la seccion del DOM que tiene como (id='movieDetail') y que tiene como clase (movieDetail-container) ya que en la vista principal(home) no se muestra el detalle de la pelicula
     movieDetailSection.classList.add('inactive')//inactivo la seccion (movieDetailSection) ya que no se requiere mostrar los detalles de la pelicula en esta vista
@@ -140,6 +142,7 @@ function movieDetailsPage() {
     searchForm.classList.add('inactive')//oculto el formulario de busqueda en la vista de(movieDetail) ya que no se necesita
     trendingPreviewSection.classList.add('inactive')//oculto la seccion de la vista previa de tendencias (trendingPreview) ya que no se necesita en la vista de (movieDetail)
     categoriesPreviewSection.classList.add('inactive')//oculto la seccion de la vista (categorias previas) ya que no se requiere ver la lista de las categorias de pelicula.    
+    likedMoviesSection.classList.add('inactive')//oculto la seccion la seccion (likedMoviesSection) que contiene la seccion inferior de peliculas favoritas marcada por el usuario para no sea visible en esta seccion
     genericSection.classList.add('inactive')//inactivo la seccion del DOM que tiene como (id="genericList") para no mostrar las lista vertical de peliculas en esta vista 
     //ocultamos la seccion del DOM que tiene como (id='movieDetail') y que tiene como clase (movieDetail-container) ya que en la vista principal(home) no se muestra el detalle de la pelicula
     movieDetailSection.classList.remove('inactive')//activo  la seccion (movieDetailSection) para ver la lista de generos de pelicula
@@ -165,6 +168,7 @@ function searchPage() {
     searchForm.classList.remove('inactive')//muestro el formulario de busqueda en la vista de(searchPage) 
     trendingPreviewSection.classList.add('inactive')//oculto la seccion de la vista previa de tendencias (trendingPreview) ya que no se necesita en esta vista
     categoriesPreviewSection.classList.add('inactive')//oculto la seccion de la vista (categorias previas) ya que no se requiere.    
+    likedMoviesSection.classList.add('inactive')//oculto la seccion la seccion (likedMoviesSection) que contiene la seccion inferior de peliculas favoritas marcada por el usuario para no sea visible en esta seccion
     genericSection.classList.remove('inactive')//activo la seccion del DOM que tiene como (id="genericList") para mostrar las lista vertical de peliculas encontradas segun el parametro de busqueda ingresada por el usuario
     //ocultamos la seccion del DOM que tiene como (id='movieDetail') y que tiene como clase (movieDetail-container) ya que en la vista principal(home) no se muestra el detalle de la pelicula
     movieDetailSection.classList.add('inactive')//desactivo la seccion (movieDetailSection) ya que se requiere mostrar los detalles de la pelicula
@@ -195,6 +199,7 @@ function trendsPage() {
     searchForm.classList.add('inactive')//oculto el formulario de busqueda en esta vista de(trendsPage) 
     trendingPreviewSection.classList.add('inactive')//oculto la seccion de la vista previa de tendencias (trendingPreview) ya que no se necesita en esta vista
     categoriesPreviewSection.classList.add('inactive')//oculto la seccion de la vista (categorias previas) ya que no se requiere.    
+    likedMoviesSection.classList.add('inactive')//oculto la seccion la seccion (likedMoviesSection) que contiene la seccion inferior de peliculas favoritas marcada por el usuario para no sea visible en esta seccion
     genericSection.classList.remove('inactive')//oculto la secciondescativo la seccion del DOM que tiene como (id="genericList") ya que no se requiere mostrar las lista vertical de peliculas de una categoria
     //ocultamos la seccion del DOM que tiene como (id='movieDetail') y que tiene como clase (movieDetail-container) ya que en la vista (trendsPage) no se muestra el detalle de la pelicula
     movieDetailSection.classList.add('inactive')//inactivo la seccion (movieDetailSection) ya que no se requiere mostrar los detalles de la pelicula

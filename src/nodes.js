@@ -4,6 +4,7 @@ const trendingPreviewSection = document.querySelector('#trendingPreview');//capt
 const categoriesPreviewSection = document.querySelector('#categoriesPreview');//capturo el elemento section del (DOM) que tiene (id="categoriesPreview")
 const genericSection = document.querySelector('#genericList');//capturo el elemento section del (DOM) que tiene (id="genericList")
 const movieDetailSection = document.querySelector('#movieDetail');//capturo el elemento section del (DOM) que tiene (id="movieDetail")
+const likedMoviesSection = document.querySelector('#liked');//capturo el elemento section del (DOM) que tiene (id="liked")
 
 // Lists & Containers
 const searchForm = document.querySelector('#searchForm');//capturo el hash(#searchForm) del (DOM) 
