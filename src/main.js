@@ -30,10 +30,13 @@ function likedMoviesList(){
     return movies;
 }
 
-//FUNCION QUE GUARDA O ELIMINA LA PELICULA SEGUN EL USUARIO DE CLCIK EN EL BOTON CORAZON LO CUAL SIGNIFICA QUE LE GUSTO LA PELICULA PARA GUARDARLA EN LA NUEVA SECCION DE FAVORITOS
+//FUNCION QUE GUARDA O ELIMINA LA PELICULA SEGUN EL USUARIO DE CLCIK EN EL BOTON CORAZON LO CUAL SIGNIFICA QUE LE GUSTO LA PELICULA PARA GUARDARLA EN LA NUEVA SECCION INFERIOR DE FAVORITOS
 function likeMovie(movie){
+    console.log("ENTROOOOOOOOOOOOOO")
    //identificamos si vamos a guardar o a eliminar la pelicula en el localStorage    
     const likedMovies = likedMoviesList();// esta lista contiene las peliculas favoritas por el usuario
+    console.log(likedMovies)
+   
     if(likedMovies[movie.id]  ){//SI LA PLEICULA YA SE ENCUENTRA GUARDADA EN LOCALSTORAGE LE ELIMINAMOS
         //console.log("La pelicula ya se encontra guardada en el localStorage por lo tanto de debe eliminar")
         likedMovies[movie.id] = undefined;// eliminamos la pelicula
@@ -130,6 +133,8 @@ function createMovies(movies, container, { lazyLoad = false, clean = true } = {}
         });
         const movieBtn = document.createElement('button');  //creo el boton el cual el usuario va  apoder marcar o desdemarcar como pelicula favorita en la nueva seccion
         movieBtn.classList.add('movie-btn'); // Agrego la clase al boton para cualquier seccion que tenga peliculas
+        //--> pregunta si el objeto ya tiene la pelicula guardada en el localStorage entonces agrego la clase ('movie-btn--liked') al boton y si no hasta guardada en localStorage no hay que hacer nada
+        likedMoviesList()[movie.id] && movieBtn.classList.add('movie-btn--liked')//FUNCION QUE RETORNA EL OBJETO DE PELICULA GUARDADAS EN LOCALSTORAGE COMO favoritas 
         movieBtn.addEventListener('click', () => {//Le adiciono al boton el evento (click) para que cuando el usuario le da clic a la pelicula esta se gurade en favortios
             movieBtn.classList.toggle('movie-btn--liked');//cambia el estilo del boton para cuando el usuario le da click al boton            
             likeMovie(movie);//funcion que guarda o elimina la pelicula del localStorage --> pasamos como parametro la pelicula
@@ -486,6 +491,14 @@ async function getRelatedMoviesId(movieId) {
     createMovies(relatedMovies, relatedMoviesContainer, true)
 
 }
+
+//FUNCION QUE OBTIENE LAS PELICULAS MARCADAS COMO FAVORITAS POR EL USUARIO
+async function getLikedMovies(){
+   const likedMovies = likedMoviesList() //obtengo la lista de peliculas que estan almacenadas en localStorage
+   console.log(likedMovies)//imprimo el objeto de peliculas que estan guardadas en el localStorage
+   const moviesArray = Object.values(likedMovies)//CONVERTIMOS EL OBJETO EN UN ARRAY
+   createMovies(moviesArray, likedMoviesListArticle, { lazyLoad : true, clean : true })//con el clean limpiamos lo que haya en html en el momento que se empiezan a cargar las peliculas
+}   
 
 //getTrendingMoviesPreview();
 //getCategoriesPreview();

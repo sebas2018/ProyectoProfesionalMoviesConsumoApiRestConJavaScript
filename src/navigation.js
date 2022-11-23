@@ -91,6 +91,7 @@ function homePage() {
     //siempre en la vista principal de debe llamar las siguiente funciones:
     getTrendingMoviesPreview();//funcion que consume la api que retorna la lista de imagenes de las 20 peliculas en horizontal
     getCategoriesPreview();//funcion que consume la api que retorna la lista de categrias
+    getLikedMovies();//llamado a la funcion que obtiene las peliculas marcadas como favoritas por el usuario
      
 }
 

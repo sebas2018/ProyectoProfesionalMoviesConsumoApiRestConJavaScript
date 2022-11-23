@@ -13,6 +13,8 @@ const categoriesPreviewList = document.querySelector('.categoriesPreview-list');
 const movieDetailCategoriesList = document.querySelector('#movieDetail .categories-list');
 //capruto el elemento div del (DOM) que tiene la clase(class="relatedMovies-scrollContainer")
 const relatedMoviesContainer = document.querySelector('.relatedMovies-scrollContainer');
+//capturo el elemento div del (DOM) que tiene la clase(class="liked-movieList")
+const likedMoviesListArticle = document.querySelector('.liked-movieList')
 
 // Elements
 const headerTitle = document.querySelector('.header-title');//capturo el elemento titulo(h1) del (DOM) que tiene como clase (header-title)
